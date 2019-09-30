@@ -15,4 +15,3 @@ var isPrime = (function(){
         return cache[n];
     }
 })();
-
