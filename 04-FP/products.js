@@ -34,25 +34,36 @@ log('Sort', function(){
     });
 
     log('Any list by any attribute', function(){
-        function sort(){
-            for(var i=0; i < products.length -1 ; i++)
-                for(var j = i+1; j < products.length; j++)
-                    if (products[i].id > products[j].id){
-                        var temp = products[i];
-                        products[i] = products[j];
-                        products[j] = temp;
+        function sort(list, attrName){
+            for(var i=0; i < list.length -1 ; i++)
+                for(var j = i+1; j < list.length; j++)
+                    if (list[i][attrName] > list[j][attrName]){
+                        var temp = list[i];
+                        list[i] = list[j];
+                        list[j] = temp;
                     }
         }
         log('Products by cost', function(){
-            //sort(...)
+            sort(products, 'cost')
             console.table(products);
         });
 
         log('Products by category', function(){
-            //sort(...)
+            sort(products, 'units')
             console.table(products);
         });
     });
+
+    log('Any list by any comparer', function(){
+        function sort(){
+            //fill in the blanks
+        }
+        log('Products by value [ cost * units ]', function(){
+            sort();
+            console.table(products);
+        })
+    })
+
 });
 
 log('Filter', function(){
