@@ -81,21 +81,42 @@ log('Sort', function(){
 
 log('Filter', function(){
     log('Default Filter [ stationary products ]', function(){
-        filterStationaryProducts();
-        console.table(products);
+        function filterStationaryProducts(){
+            var result = [];
+            for (let index = 0; index < products.length; index++) {
+                if (products[index].category === 'stationary')
+                    result.push(products[index]);
+            }
+            return result;
+        }
+        var stationaryProducts = filterStationaryProducts();
+        console.table(stationaryProducts);
     });
 
     log('Any list by any criteria', function(){
-        function filter(){
-            //fill in the blanks
+        function filter(list, predicate){
+            var result = [];
+            for (let index = 0; index < list.length; index++) {
+                if (predicate(list[index]))
+                    result.push(list[index]);
+            }
+            return result;
         }
 
         log('costly products [ cost > 50 ]', function(){
-
+            var costlyProductPredicate = function(product){
+                return product.cost > 50;
+            };
+            var costlyProducts = filter(products, costlyProductPredicate);
+            console.table(costlyProducts);
         })
 
-        log('understocked products [ units < 30 ]', function(){
-
+        log('understocked products [ units <= 30 ]', function(){
+            var understockedProductPredicate = function(product){
+                return product.units <= 30;
+            };
+            var understockedProducts = filter(products, understockedProductPredicate);
+            console.table(understockedProducts);
         })
     })
 });
