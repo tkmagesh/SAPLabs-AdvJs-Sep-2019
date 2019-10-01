@@ -1,6 +1,6 @@
 var products = [
-    {id : 7, name : 'Pen', cost : 40, units : 20, category : 'stationary'},
-    {id : 2, name : 'Ten', cost : 80, units : 10, category : 'grocery'},
+    {id : 7, name : 'Pen', cost : 40, units : 30, category : 'stationary'},
+    {id : 2, name : 'Ten', cost : 70, units : 20, category : 'grocery'},
     {id : 9, name : 'Den', cost : 20, units : 40, category : 'stationary'},
     {id : 4, name : 'Len', cost : 60, units : 50, category : 'stationary'},
     {id : 5, name : 'Zen', cost : 50, units : 30, category : 'grocery'}
@@ -55,11 +55,24 @@ log('Sort', function(){
     });
 
     log('Any list by any comparer', function(){
-        function sort(){
-            //fill in the blanks
+        function sort(list, comparerFn){
+            for(var i=0; i < products.length -1 ; i++)
+                for(var j = i+1; j < products.length; j++)
+                    if ( comparerFn(products[i], products[j]) > 0 ){
+                        var temp = products[i];
+                        products[i] = products[j];
+                        products[j] = temp;
+                    }
         }
         log('Products by value [ cost * units ]', function(){
-            sort();
+            let productComparerByValue = function(p1, p2){
+                var p1Value = p1.cost * p1.units,
+                    p2Value = p2.cost * p2.units;
+                if (p1Value < p2Value) return -1;
+                if (p1Value > p2Value) return 1;
+                return 0;
+            }
+            sort(products, productComparerByValue);
             console.table(products);
         })
     })
@@ -68,7 +81,21 @@ log('Sort', function(){
 
 log('Filter', function(){
     log('Default Filter [ stationary products ]', function(){
-        //filterStationaryProducts();
+        filterStationaryProducts();
         console.table(products);
     });
+
+    log('Any list by any criteria', function(){
+        function filter(){
+            //fill in the blanks
+        }
+
+        log('costly products [ cost > 50 ]', function(){
+
+        })
+
+        log('understocked products [ units < 30 ]', function(){
+
+        })
+    })
 });
