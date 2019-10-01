@@ -1,4 +1,12 @@
-var products = [
+interface Product {
+    id : number,
+    name : string,
+    cost : number,
+    units : number,
+    category : string
+}
+
+var products : Array<Product> = [
     {id : 7, name : 'Pen', cost : 40, units : 30, category : 'stationary'},
     {id : 2, name : 'Ten', cost : 70, units : 20, category : 'grocery'},
     {id : 9, name : 'Den', cost : 20, units : 40, category : 'stationary'},
@@ -8,13 +16,13 @@ var products = [
 
 //sort, filter, groupBy
 
-function log(title, fn){
+function log(title : string, fn : () => any){
     console.group(title);
     fn();
     console.groupEnd();
 }
 
-function logGroup(obj){
+function logGroup(obj : any){
     for(var key in obj){
         log('Key - [' + key + ']', function(){
             console.table(obj[key]);
@@ -42,7 +50,7 @@ log('Sort', function(){
     });
 
     log('Any list by any attribute', function(){
-        function sort(list, attrName){
+        function sort<T>(list : Array<T>, attrName : string){
             for(var i=0; i < list.length -1 ; i++)
                 for(var j = i+1; j < list.length; j++)
                     if (list[i][attrName] > list[j][attrName]){
@@ -62,24 +70,28 @@ log('Sort', function(){
         });
     });
 
+    interface ComparerFn<T>{
+        (item1 : T, item2 : T) : number
+    }
+
     log('Any list by any comparer', function(){
-        function sort(list, comparerFn){
-            for(var i=0; i < products.length -1 ; i++)
-                for(var j = i+1; j < products.length; j++)
-                    if ( comparerFn(products[i], products[j]) > 0 ){
-                        var temp = products[i];
-                        products[i] = products[j];
-                        products[j] = temp;
+        function sort<T>(list : Array<T>, comparerFn : ComparerFn<T>){
+            for(var i=0; i < list.length -1 ; i++)
+                for(var j = i+1; j < list.length; j++)
+                    if ( comparerFn(list[i], list[j]) > 0 ){
+                        var temp = list[i];
+                        list[i] = list[j];
+                        list[j] = temp;
                     }
         }
 
-        function getDescendingComparer(comparer){
-            return function(){
-                return comparer.apply(this, arguments) * -1;
+        function getDescendingComparer<T> (comparer : ComparerFn<T>) : ComparerFn<T>{
+            return function(item1 : T, item2 : T) : number {
+                return comparer(item1, item2) * -1;
             }
         }
 
-        let productComparerByValue = function(p1, p2){
+        let productComparerByValue : ComparerFn<Product>= function(p1 : Product, p2 : Product){
             var p1Value = p1.cost * p1.units,
                 p2Value = p2.cost * p2.units;
             if (p1Value < p2Value) return -1;
