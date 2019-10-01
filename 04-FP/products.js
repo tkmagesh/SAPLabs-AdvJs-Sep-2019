@@ -103,20 +103,52 @@ log('Filter', function(){
             return result;
         }
 
-        log('costly products [ cost > 50 ]', function(){
-            var costlyProductPredicate = function(product){
-                return product.cost > 50;
-            };
-            var costlyProducts = filter(products, costlyProductPredicate);
-            console.table(costlyProducts);
-        })
+        function negate(predicate){
+            return function(){
+                return !predicate.apply(this, arguments);
+            }
+        }
 
-        log('understocked products [ units <= 30 ]', function(){
+        log('Products by cost', function(){
+            var costlyProductPredicate = function(product){
+                return product.cost > 40;
+            };
+
+            log('costly products [ cost > 40 ]', function(){
+                var costlyProducts = filter(products, costlyProductPredicate);
+                console.table(costlyProducts);
+            })
+
+            log('affordable products [!costly product]', function(){
+               /* var affordableProductPredicate = function(product){
+                    return !costlyProductPredicate(product);
+                };
+                */
+               var affordableProductPredicate = negate(costlyProductPredicate);
+                var affordableProducts = filter(products, affordableProductPredicate);
+                console.table(affordableProducts);
+            })
+        });
+
+        log('Product by units', function(){
             var understockedProductPredicate = function(product){
                 return product.units <= 30;
             };
-            var understockedProducts = filter(products, understockedProductPredicate);
-            console.table(understockedProducts);
-        })
+            log('understocked products [ units <= 30 ]', function(){
+                
+                var understockedProducts = filter(products, understockedProductPredicate);
+                console.table(understockedProducts);
+            })
+            log('overstocked products [!understocked]', function(){
+                /*
+                var overstockedProductPredicate = function(product){
+                    return !understockedProductPredicate(product);
+                };
+                */
+               var overstockedProductPredicate = negate(understockedProductPredicate);
+                var overstockedProducts = filter(products, overstockedProductPredicate);
+                console.table(overstockedProducts);
+            });
+        });
     })
 });
