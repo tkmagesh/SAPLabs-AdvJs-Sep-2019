@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Scheduler</title>
+    <script>
+        (function(){
+            function init(){
+                var btnDoWork = document.getElementById('btnDoWork');
+                btnDoWork.addEventListener('click', onBtnDoWorkClick);    
+            }
+            
+            function onBtnDoWorkClick(){
+                displayMessage('Work Started');
+                setTimeout(triggerWork);                
+            }
+            function triggerWork(){
+                doWork(onWorkCompletion, onWorkProgress);
+            }
+            function onWorkProgress(percentCompleted){
+                document.getElementById('workProgress').value = percentCompleted;
+            }
+            function onWorkCompletion(){
+                displayMessage('Work Completed');
+            }
+
+            function displayMessage(msg){
+                var divMessages = document.getElementById('divMessages');
+                divMessages.innerHTML += msg + '<br/>';
+            }
+            function doWork(workComplete, workProgress){
+                var totalIterations = 1000,
+                    currentIteration = 0;
+
+                function oneIteration(){
+                    for (let i = 0; i < (200000/totalIterations); i++) {
+                        for (let j = 0; j < 1000; j++) {
+                            for (let k = 0; k < 100; k++) {
+                            }
+                        }
+                    }
+                    ++currentIteration;
+                    if (currentIteration % 10 === 0 && workProgress){
+                        var percentCompleted = (currentIteration/totalIterations) * 100;
+                        workProgress(percentCompleted);
+                    }
+                    if (currentIteration < totalIterations){
+                        setTimeout(oneIteration);
+                    } else {
+                        console.log('Job Done!!');
+                        if (typeof workComplete === 'function')
+                            workComplete();
+                    }
+                }
+
+                setTimeout(oneIteration);
+            }
+            window.addEventListener('load', init);
+        })();
+    </script>
+</head>
+<body>
+    <h1>Scheduler</h1>
+    <hr>
+    <input type="text" name="" id="">
+    <input type="button" value="Do Work" id="btnDoWork">
+    <div>
+        <progress id="workProgress" min="0" max="100" value="0"></progress>
+    </div>
+    <div id="divMessages"></div>
+</body>
+</html>
