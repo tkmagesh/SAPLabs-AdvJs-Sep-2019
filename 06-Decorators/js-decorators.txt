@@ -1,0 +1,36 @@
+var obj = {
+	m1(){
+		console.log('m1 is invoked');
+    },
+	m2(){
+		console.log('m2 is invoked');
+    }
+}
+
+function decorateLogger(obj){
+	var result = {};
+	for(let key in obj){
+		if (typeof obj[key] === 'function'){
+			result[key] = function(...args){
+				console.log('invocation started');
+				obj[key](...args);
+				console.log('invocation completed');
+            }
+        } else {
+			result[key] = obj[key];
+        }
+    }
+	return result;
+}
+var loggedObj = decorateLogger(obj)
+loggedObj.m1()
+loggedObj.m2()
+var calc = {
+	add(x,y){
+		console.log(x + y);
+                    },
+	subtract(x,y){
+		console.log(x - y);
+    }
+}
+var loggedCalc = decorateLogger(calc)
