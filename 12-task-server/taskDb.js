@@ -15,6 +15,8 @@ module.exports = {
 };
 */
 
+//constructing Promises from callbacks 
+/*
 module.exports = {
     getData(){
         return new Promise(function (resolveFn, rejectFn){
@@ -33,5 +35,38 @@ module.exports = {
                 return resolveFn();
             });
         });
+    }
+};
+*/
+
+//Using util.promisify
+/*
+const util = require('util'),
+    readFileAsync = util.promisify(fs.readFile),
+    writeFileAsync = util.promisify(fs.writeFile);
+
+module.exports = {
+    async getData(){
+        const rawData = await readFileAsync(dbFile, { encoding : 'utf8'});
+        return JSON.parse(rawData);
+        
+    },
+    async saveData(taskList){
+        return await writeFileAsync(dbFile, JSON.stringify(taskList));
+    }
+};
+*/
+
+var bluebird = require('bluebird');
+bluebird.promisifyAll(fs);
+
+module.exports = {
+    async getData(){
+        const rawData = await fs.readFileAsync(dbFile, { encoding : 'utf8'});
+        return JSON.parse(rawData);
+        
+    },
+    async saveData(taskList){
+        return await fs.writeFileAsync(dbFile, JSON.stringify(taskList));
     }
 };
