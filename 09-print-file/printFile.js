@@ -41,7 +41,15 @@ stream.on('error', function(err){
     console.log(err);
 })
 */
-stream.pipe(process.stdout);
+//stream.pipe(process.stdout);
+let readCount = 0;
+stream.on('data', function(chunk){
+    console.log(chunk.length);
+    ++readCount;
+});
 stream.on('error', function(err){
     console.log(err);
+})
+stream.on('end', function(){
+    console.log(`Total read count = ${readCount} `);
 })
