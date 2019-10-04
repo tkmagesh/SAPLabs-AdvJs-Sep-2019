@@ -1,12 +1,20 @@
-const http = require('http');
+const http = require('http'),
+    fs = require('fs'),
+    path = require('path');
 
 // req - IncomingMessage (class) inherits from ReadableStream
 // res - ServerResponse (class) inherits from WritableStream
 
 const server = http.createServer((req, res) => {
     console.log(`A new connection is established - ${req.url}`);
-    res.write('<h1>Welcome to Node.js</h1>');
-    res.end();
+    const resourceName = req.url === '/' ? 'index.html' : req.url;
+    const resourceFullName = path.join(__dirname, resourceName);
+    if (!fs.existsSync(resourceFullName)){
+        res.statusCode = 404;
+        res.end();
+        return;
+    }
+    fs.createReadStream(resourceFullName).pipe(res);
 });
 
 server.listen(8080);
